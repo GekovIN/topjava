@@ -1,7 +1,6 @@
 package ru.javawebinar.topjava.repositories.memory_repo;
 
-import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.repositories.MealsRepository;
+import ru.javawebinar.topjava.model.meal_model.Meal;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class MealMemoryRepo implements MealsRepository {
+public class MealMemoryRepo {
 
     private Map<Long, Meal> meals;
 
@@ -30,19 +29,16 @@ public class MealMemoryRepo implements MealsRepository {
         return meals;
     }
 
-    @Override
     public List<Meal> findAll() {
         return new ArrayList<>(getMeals().values());
     }
 
     public void addMeal() {}
 
-    @Override
     public void deleteMeal() {
 
     }
 
-    @Override
     public void updateMeal() {
 
     }

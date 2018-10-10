@@ -2,10 +2,10 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.MealWithExceed;
-import ru.javawebinar.topjava.repositories.MealsRepository;
-import ru.javawebinar.topjava.repositories.memory_repo.MealMemoryRepo;
+import ru.javawebinar.topjava.model.meal_model.Meal;
+import ru.javawebinar.topjava.model.meal_model.MealWithExceed;
+import ru.javawebinar.topjava.service.meal_service.MealService;
+import ru.javawebinar.topjava.service.meal_service.MealServiceFabric;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.ServletException;
@@ -24,16 +24,16 @@ public class MealServlet extends HttpServlet {
     private static String LIST_MEALS = "/meals.jsp";
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm");
 
-    private MealsRepository repository;
+    private MealService mealService;
 
     public MealServlet() {
-        this.repository = new MealMemoryRepo();
+        this.mealService = MealServiceFabric.getMealService();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         LOG.debug("forward to meals list");
-        List<Meal> meals = repository.findAll();
+        List<Meal> meals = mealService.findAll();
         List<MealWithExceed> mealsWithExceeds = MealsUtil.getAllWithExceeded(meals, caloriesPerDay);
 
         LOG.debug("received MealWithExceed list from repository, size: " + mealsWithExceeds.size());
