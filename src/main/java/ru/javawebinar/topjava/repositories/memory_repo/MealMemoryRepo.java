@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MealMemoryRepo {
 
     private Map<Long, Meal> meals;
+    private Long lastIndex;
 
     private Map<Long, Meal> getMeals() {
 
@@ -24,6 +25,7 @@ public class MealMemoryRepo {
             meals.put(4L, new Meal(4L, LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000));
             meals.put(5L, new Meal(5L, LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500));
             meals.put(6L, new Meal(6L, LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510));
+            lastIndex = 6L;
         }
 
         return meals;
@@ -33,15 +35,24 @@ public class MealMemoryRepo {
         return new ArrayList<>(getMeals().values());
     }
 
-    public void addMeal() {}
-
-    public void deleteMeal() {
-
+    public void addMeal(Meal meal) {
+        if (meal == null)
+            return;
+        lastIndex++;
+        meal.setId(lastIndex);
+        meals.put(lastIndex, meal);
     }
 
-    public void updateMeal() {
+    public void deleteMeal(Long id) {
+        meals.remove(id);
+    }
 
+    public void updateMeal(Meal meal) {
+        meals.put(meal.getId(), meal);
     }
 
 
+    public Meal findMealById(Long id) {
+        return meals.get(id);
+    }
 }

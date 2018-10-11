@@ -3,19 +3,29 @@ package ru.javawebinar.topjava.model.meal_model;
 import java.time.LocalDateTime;
 
 public class MealWithExceed {
-    private final LocalDateTime dateTime;
 
-    private final String description;
+    private Long id;
 
-    private final int calories;
+    private LocalDateTime dateTime;
 
-    private final boolean exceed;
+    private String description;
 
-    public MealWithExceed(LocalDateTime dateTime, String description, int calories, boolean exceed) {
+    private int calories;
+
+    private boolean exceed;
+
+    public MealWithExceed() {}
+
+    public MealWithExceed(Long id, LocalDateTime dateTime, String description, int calories, boolean exceed) {
+        this.id = id;
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
         this.exceed = exceed;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public LocalDateTime getDateTime() {
