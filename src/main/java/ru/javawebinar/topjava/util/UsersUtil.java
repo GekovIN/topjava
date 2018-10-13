@@ -12,11 +12,11 @@ import java.util.stream.Collectors;
 public class UsersUtil {
 
     public static final List<User> USERS = Arrays.asList(
-            new User(-1, "Илья", "gekovin@gmail.com", "1111", Role.ROLE_ADMIN),
-            new User(-1, "Альбина", "albina@gmail.com", "2222", Role.ROLE_USER),
-            new User(-1, "Иван", "ivan@gmail.com", "3333", Role.ROLE_USER),
-            new User(-1, "Анна", "anna@gmail.com", "4444", Role.ROLE_USER),
-            new User(-1, "Павел", "pavel@gmail.com", "5555", Role.ROLE_USER)
+            new User(null, "Илья", "gekovin@gmail.com", "1111", Role.ROLE_ADMIN),
+            new User(null, "Альбина", "albina@gmail.com", "2222", Role.ROLE_USER),
+            new User(null, "Иван", "ivan@gmail.com", "3333", Role.ROLE_USER),
+            new User(null, "Анна", "anna@gmail.com", "4444", Role.ROLE_USER),
+            new User(null, "Павел", "pavel@gmail.com", "5555", Role.ROLE_USER)
     );
 
     public static List<User> getFilteredByName(List<User> users) {
