@@ -3,14 +3,16 @@ package ru.javawebinar.topjava.service;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.repository.mock.InMemoryMealRepositoryImpl;
-import ru.javawebinar.topjava.util.exception.NotFoundException;
+
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFound;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
+
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class MealServiceImpl implements MealService {
 
-    private static String NOT_FOUND_MESSAGE = "Meal with id: %d for user with id: %d not found.";
 
     private MealRepository repository;
 
@@ -28,10 +30,7 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public Meal get(int id, int userId) {
-        Meal meal = repository.get(id, userId);
-        if (meal == null)
-            throw new NotFoundException(String.format(NOT_FOUND_MESSAGE, id, userId));
-        return meal;
+        return checkNotFoundWithId(repository.get(id, userId), id);
     }
 
     @Override
@@ -40,16 +39,13 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public Meal update(Meal meal, int userId) {
-        if (meal.getUserID() != userId)
-            throw new NotFoundException(String.format(NOT_FOUND_MESSAGE, meal.getId(), userId));
-        return create(meal);
+    public void update(Meal meal, int userId) {
+        checkNotFoundWithId(repository.save(meal), meal.getId());
     }
 
     @Override
     public void delete(int id, int userId) {
-        if (!repository.delete(id, userId))
-            throw new NotFoundException(String.format(NOT_FOUND_MESSAGE, id, userId));
+        checkNotFoundWithId(repository.delete(id, userId), id);
     }
 
 //    public static void main(String[] args) {
