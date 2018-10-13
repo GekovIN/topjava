@@ -56,9 +56,9 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
                 .collect(Collectors.toList());
     }
 
-    public static void main(String[] args) {
-        InMemoryMealRepositoryImpl repository = new InMemoryMealRepositoryImpl();
-        System.out.println(repository.get(3, 2));
-    }
+//    public static void main(String[] args) {
+//        InMemoryMealRepositoryImpl repository = new InMemoryMealRepositoryImpl();
+//        System.out.println(repository.get(3, 2));
+//    }
 }
 
