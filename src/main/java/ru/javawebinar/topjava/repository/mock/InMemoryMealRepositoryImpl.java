@@ -5,9 +5,11 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class InMemoryMealRepositoryImpl implements MealRepository {
     private Map<Integer, Meal> repository = new ConcurrentHashMap<>();
@@ -29,18 +31,34 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public void delete(int id) {
+    public boolean delete(int id, int userId) {
+        Meal meal = get(id, userId);
+        if (meal == null)
+            return false;
         repository.remove(id);
+        return true;
     }
 
     @Override
-    public Meal get(int id) {
-        return repository.get(id);
+    public Meal get(int id, int userId) {
+        Meal meal = repository.get(id);
+        if (meal == null || meal.getUserID() != userId)
+            return null;
+        return meal;
     }
 
     @Override
-    public Collection<Meal> getAll() {
-        return repository.values();
+    public Collection<Meal> getAll(int userId) {
+        return repository.values()
+                .stream()
+                .filter(m -> m.getUserID() == userId)
+                .sorted((m1, m2) -> m2.getDateTime().compareTo(m1.getDateTime()))
+                .collect(Collectors.toList());
+    }
+
+    public static void main(String[] args) {
+        InMemoryMealRepositoryImpl repository = new InMemoryMealRepositoryImpl();
+        System.out.println(repository.get(3, 2));
     }
 }
 
