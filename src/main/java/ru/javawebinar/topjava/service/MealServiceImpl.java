@@ -7,8 +7,7 @@ import ru.javawebinar.topjava.repository.mock.InMemoryMealRepositoryImpl;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFound;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
-
-import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class MealServiceImpl implements MealService {
@@ -21,7 +20,7 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public Collection<Meal> getAll(int userId) {
+    public List<Meal> getAll(int userId) {
         return repository.getAll(userId)
                 .stream()
                 .sorted((m1, m2) -> m2.getDateTime().compareTo(m1.getDateTime()))
