@@ -22,8 +22,19 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
         MealsUtil.MEALS.forEach(this::save);
     }
 
+    private void save(Meal meal) {
+        if (meal.isNew()) {
+            meal.setId(counter.incrementAndGet());
+            repository.put(meal.getId(), meal);
+        }
+        // treat case: update, but absent in storage
+        repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
+    }
+
     @Override
-    public Meal save(Meal meal) {
+    public Meal save(Meal meal, int userId) {
+        if (meal.getUserID() != userId)
+            return null;
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
             repository.put(meal.getId(), meal);

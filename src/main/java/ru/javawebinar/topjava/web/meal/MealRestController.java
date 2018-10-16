@@ -10,6 +10,7 @@ import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
+import java.util.Collection;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
@@ -23,9 +24,9 @@ public class MealRestController {
     @Autowired
     private MealService service;
 
-    public List<MealWithExceed> getAll(int id) {
+    public List<MealWithExceed> getAll() {
         log.info("getAll");
-        List<Meal> meals = service.getAll(id);
+        List<Meal> meals = service.getAll(SecurityUtil.authUserId());
         return MealsUtil.getWithExceeded(meals, SecurityUtil.authUserCaloriesPerDay());
     }
 
@@ -37,6 +38,7 @@ public class MealRestController {
     public Meal create(Meal meal) {
         log.info("create {}", meal);
         checkNew(meal);
+        meal.setUserID(SecurityUtil.authUserId());
         return service.create(meal);
     }
 
@@ -45,9 +47,8 @@ public class MealRestController {
         service.delete(id, SecurityUtil.authUserId());
     }
 
-    public void update(Meal meal, int id) {
-        log.info("update {} with id={}", meal, id);
-        assureIdConsistent(meal, id);
+    public void update(Meal meal, int userId) {
+        log.info("update {} with id={}", meal, userId);
         service.update(meal, SecurityUtil.authUserId());
     }
 

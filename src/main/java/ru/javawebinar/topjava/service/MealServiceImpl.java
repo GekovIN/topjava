@@ -37,12 +37,12 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public Meal create(Meal meal) {
-        return repository.save(meal);
+        return repository.save(meal, meal.getUserID());
     }
 
     @Override
     public void update(Meal meal, int userId) {
-        checkNotFoundWithId(repository.save(meal), meal.getId());
+        checkNotFoundWithId(repository.save(meal, userId), meal.getId());
     }
 
     @Override
