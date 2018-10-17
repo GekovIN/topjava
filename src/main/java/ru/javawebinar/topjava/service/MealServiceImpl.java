@@ -9,6 +9,8 @@ import ru.javawebinar.topjava.repository.mock.InMemoryMealRepositoryImpl;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFound;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +30,11 @@ public class MealServiceImpl implements MealService {
                 .stream()
                 .sorted((m1, m2) -> m2.getDateTime().compareTo(m1.getDateTime()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Meal> getAllFilteredByDateTime(int userId, LocalDate fromDate, LocalDate toDate, LocalTime fromTime, LocalTime toTime) {
+        return repository.getAllFilteredByDateTime(userId, fromDate, toDate, fromTime, toTime);
     }
 
     @Override

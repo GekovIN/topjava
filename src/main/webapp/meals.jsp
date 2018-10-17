@@ -49,5 +49,27 @@
         </c:forEach>
     </table>
 </section>
+
+<form method="post" action="meals">
+    <input type="hidden" name="filter" value=true>
+    <dl>
+        <dt>От даты:</dt>
+        <dd><input type="date" name="fromDate" value="${param.get("fromDate")}"></dd>
+    </dl>
+    <dl>
+        <dt>До даты:</dt>
+        <dd><input type="date" name="toDate" value="${param.get("toDate")}"></dd>
+    </dl>
+    <dl>
+        <dt>От времени:</dt>
+        <dd><input type="time" name="fromTime" value="${param.get("fromTime")}"></dd>
+    </dl>
+    <dl>
+        <dt>До времени:</dt>
+        <dd><input type="time" name="toTime" value="${param.get("toTime")}"></dd>
+    </dl>
+    <button type="submit">Отфильтровать</button>
+</form>
+
 </body>
 </html>

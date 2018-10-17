@@ -7,13 +7,14 @@ import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealWithExceed;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
-import java.util.Collection;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
-import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 @Controller
@@ -27,6 +28,27 @@ public class MealRestController {
     public List<MealWithExceed> getAll() {
         log.info("getAll");
         List<Meal> meals = service.getAll(SecurityUtil.authUserId());
+        return MealsUtil.getWithExceeded(meals, SecurityUtil.authUserCaloriesPerDay());
+    }
+
+    public List<MealWithExceed> getAllDateFiltered(String fromDateStr, String toDateStr, String fromTimeStr, String toTimeStr) {
+
+        LocalDate fromDate = DateTimeUtil.localDateParse(fromDateStr);
+        LocalDate toDate = DateTimeUtil.localDateParse(toDateStr);
+        if (fromDate == null)
+            fromDate = LocalDate.MIN;
+        if (toDate == null)
+            toDate = LocalDate.MAX;
+
+        LocalTime fromTime = DateTimeUtil.localTimeParse(fromTimeStr);
+        LocalTime toTime = DateTimeUtil.localTimeParse(toTimeStr);
+        if (fromTime == null)
+            fromTime = LocalTime.MIN;
+        if (toTime == null)
+            toTime = LocalTime.MAX;
+
+        List<Meal> meals = service.getAllFilteredByDateTime(SecurityUtil.authUserId(), fromDate, toDate, fromTime, toTime);
+
         return MealsUtil.getWithExceeded(meals, SecurityUtil.authUserCaloriesPerDay());
     }
 

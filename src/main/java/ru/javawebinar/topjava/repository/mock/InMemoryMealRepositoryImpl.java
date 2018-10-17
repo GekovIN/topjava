@@ -3,8 +3,11 @@ package ru.javawebinar.topjava.repository.mock;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -12,6 +15,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Repository
 public class InMemoryMealRepositoryImpl implements MealRepository {
@@ -70,7 +75,16 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
                 .collect(Collectors.toList());
     }
 
-//    public static void main(String[] args) {
+    @Override
+    public List<Meal> getAllFilteredByDateTime(int userId, LocalDate fromDate, LocalDate toDate, LocalTime fromTime, LocalTime toTime) {
+        return getAll(userId)
+                .stream()
+                .filter(m -> DateTimeUtil.isBetween(m.getDateTime().toLocalDate(), fromDate, toDate) &&
+                             DateTimeUtil.isBetween(m.getDateTime().toLocalTime(), fromTime, toTime))
+                .collect(toList());
+    }
+
+    //    public static void main(String[] args) {
 //        InMemoryMealRepositoryImpl repository = new InMemoryMealRepositoryImpl();
 //        System.out.println(repository.get(3, 2));
 //    }

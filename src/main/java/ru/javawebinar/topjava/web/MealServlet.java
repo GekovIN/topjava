@@ -7,6 +7,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.repository.mock.InMemoryMealRepositoryImpl;
+import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Objects;
 
 public class MealServlet extends HttpServlet {
@@ -38,20 +40,34 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        String id = request.getParameter("id");
+        String filter = request.getParameter("filter");
 
-        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
-                SecurityUtil.authUserId(),
-                LocalDateTime.parse(request.getParameter("dateTime")),
-                request.getParameter("description"),
-                Integer.parseInt(request.getParameter("calories")));
+        if (filter != null) {
+            String fromDateStr = request.getParameter("fromDate");
+            String toDateStr = request.getParameter("toDate");
+            String fromTimeStr = request.getParameter("fromTime");
+            String toTimeStr = request.getParameter("toTime");
 
-        log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
-        if (meal.getId() == null)
-            controller.create(meal);
-        else
-            controller.update(meal, SecurityUtil.authUserId());
-        response.sendRedirect("meals");
+            List<MealWithExceed> mealsDateFiltered = controller.getAllDateFiltered(fromDateStr, toDateStr, fromTimeStr, toTimeStr);
+            request.setAttribute("meals", mealsDateFiltered);
+            request.getRequestDispatcher("/meals.jsp").forward(request, response);
+
+        } else {
+            String id = request.getParameter("id");
+
+            Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
+                    SecurityUtil.authUserId(),
+                    LocalDateTime.parse(request.getParameter("dateTime")),
+                    request.getParameter("description"),
+                    Integer.parseInt(request.getParameter("calories")));
+
+            log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
+            if (meal.getId() == null)
+                controller.create(meal);
+            else
+                controller.update(meal, SecurityUtil.authUserId());
+            response.sendRedirect("meals");
+        }
     }
 
     @Override
