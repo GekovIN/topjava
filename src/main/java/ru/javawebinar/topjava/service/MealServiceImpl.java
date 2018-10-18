@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.repository.mock.InMemoryMealRepositoryImpl;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFound;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
@@ -33,8 +32,8 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public List<Meal> getAllFilteredByDateTime(int userId, LocalDate fromDate, LocalDate toDate, LocalTime fromTime, LocalTime toTime) {
-        return repository.getAllFilteredByDateTime(userId, fromDate, toDate, fromTime, toTime);
+    public List<Meal> getAllFilteredByDate(int userId, LocalDate fromDate, LocalDate toDate) {
+        return repository.getAllFilteredByDate(userId, fromDate, toDate);
     }
 
     @Override
@@ -56,11 +55,5 @@ public class MealServiceImpl implements MealService {
     public void delete(int id, int userId) {
         checkNotFoundWithId(repository.delete(id, userId), id);
     }
-
-//    public static void main(String[] args) {
-//        MealServiceImpl service = new MealServiceImpl(new InMemoryMealRepositoryImpl());
-//
-//        service.delete(2, 2);
-//    }
 
 }

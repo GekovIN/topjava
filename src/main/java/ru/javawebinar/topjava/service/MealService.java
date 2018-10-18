@@ -9,7 +9,7 @@ import java.util.List;
 public interface MealService {
 
     List<Meal> getAll(int userId);
-    List<Meal> getAllFilteredByDateTime(int userId, LocalDate fromDate, LocalDate toDate, LocalTime fromTime, LocalTime toTime);
+    List<Meal> getAllFilteredByDate(int userId, LocalDate fromDate, LocalDate toDate);
     Meal get(int id, int userId);
     Meal create(Meal meal);
     void update(Meal meal, int userId);

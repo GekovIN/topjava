@@ -46,10 +46,16 @@ public class MealRestController {
             fromTime = LocalTime.MIN;
         if (toTime == null)
             toTime = LocalTime.MAX;
+//      Ошибка - получаем exceeded уже по отфильтрованному списку, соответственно exceed определяется неправильно:
+//        List<Meal> meals = service.getAllFilteredByDate(SecurityUtil.authUserId(), fromDate, toDate, fromTime, toTime);
+//
+//        return MealsUtil.getWithExceeded(meals, SecurityUtil.authUserCaloriesPerDay());
 
-        List<Meal> meals = service.getAllFilteredByDateTime(SecurityUtil.authUserId(), fromDate, toDate, fromTime, toTime);
+//      Правильно: сначала получаем список Meal отфильтрованный по датам
+//                 затем получаем список MealWithExceed, отфильтрованный по времени
+        List<Meal> mealsFiltered = service.getAllFilteredByDate(SecurityUtil.authUserId(), fromDate, toDate);
+        return MealsUtil.getFilteredWithExceeded(mealsFiltered, SecurityUtil.authUserCaloriesPerDay(), fromTime, toTime);
 
-        return MealsUtil.getWithExceeded(meals, SecurityUtil.authUserCaloriesPerDay());
     }
 
     public Meal get(int id) {

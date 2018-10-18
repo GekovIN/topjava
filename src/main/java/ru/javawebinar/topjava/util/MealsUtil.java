@@ -42,6 +42,7 @@ public class MealsUtil {
         return getFilteredWithExceeded(meals, caloriesPerDay, meal -> DateTimeUtil.isBetween(meal.getTime(), startTime, endTime));
     }
 
+    //Метод с фильтрацией, используя предикат - условие, которое должно возвращать boolean, которое можно подставить в метод filter стрима:
     private static List<MealWithExceed> getFilteredWithExceeded(Collection<Meal> meals, int caloriesPerDay, Predicate<Meal> filter) {
         Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
                 .collect(
