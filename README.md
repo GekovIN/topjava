@@ -1,3 +1,6 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/494f125de73340bebacf092a96635df2)](https://www.codacy.com/app/GekovIN/topjava?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=GekovIN/topjava&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://travis-ci.org/GekovIN/topjava.svg?branch=master)](https://travis-ci.org/GekovIN/topjava)
+
 Java Enterprise Online Project 
 ===============================
 Разработка полнофункционального Spring/JPA Enterprise приложения c авторизацией и правами доступа на основе ролей с использованием наиболее популярных инструментов и технологий Java: Maven, Spring MVC, Security, JPA(Hibernate), REST(Jackson), Bootstrap (css,js), datatables, jQuery + plugins, Java 8 Stream and Time API и хранением в базах данных Postgresql и HSQLDB.
