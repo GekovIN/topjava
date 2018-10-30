@@ -5,6 +5,7 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.Stopwatch;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
@@ -24,6 +25,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
@@ -47,23 +49,14 @@ public class MealServiceTest {
     private static Map<String, Long> allTestTime = new HashMap<>();
 
     @Rule
-    public TestWatcher testWatcher = new TestWatcher() {
-
-        private long start;
+    public Stopwatch stopwatch = new Stopwatch() {
 
         @Override
-        protected void starting(Description description) {
-            logger.info("Starting test: " + description.getMethodName());
-            start = System.currentTimeMillis();
+        protected void finished(long nanos, Description description) {
+            long ms = convertNanosToMillis(nanos);
+            allTestTime.put("Test " + description.getMethodName(), ms);
+            logger.info("Test " + description.getMethodName() + " took " + ms + " ms");
         }
-
-        @Override
-        protected void finished(Description description) {
-            long end = System.currentTimeMillis();
-            allTestTime.put("Test " + description.getMethodName(), (end - start));
-            logger.info("Test " + description.getMethodName() + " took " + (end - start) + "ms");
-        }
-
     };
 
     @ClassRule
@@ -150,5 +143,9 @@ public class MealServiceTest {
         Meal created = getCreated();
         created.setDescription(" ");
         service.create(created, USER_ID);
+    }
+
+    private static long convertNanosToMillis(long nanos) {
+        return TimeUnit.MILLISECONDS.convert(nanos, TimeUnit.NANOSECONDS);
     }
 }
