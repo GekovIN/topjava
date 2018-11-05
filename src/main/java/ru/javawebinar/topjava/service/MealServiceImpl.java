@@ -28,8 +28,8 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public Meal getWithUser(int id, int userId) {
-        return repository.getWithUser(id, userId);
+    public Meal getWithUser(int id) {
+        return repository.getWithUser(id);
     }
 
     @Override

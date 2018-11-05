@@ -11,7 +11,7 @@ import java.util.List;
 public interface MealService {
     Meal get(int id, int userId) throws NotFoundException;
 
-    default Meal getWithUser(int id, int userId) {
+    default Meal getWithUser(int id) {
         return null;
     }
 

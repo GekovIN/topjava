@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.service;
 
 
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
@@ -13,6 +14,10 @@ public interface UserService {
     void delete(int id) throws NotFoundException;
 
     User get(int id) throws NotFoundException;
+
+    default User getWithMeals(int id) {
+        return null;
+    }
 
     User getByEmail(String email) throws NotFoundException;
 
