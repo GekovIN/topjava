@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava;
 
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.User;
 
 import java.time.Month;
 import java.util.List;
@@ -42,5 +43,10 @@ public class MealTestData {
 
     public static void assertMatch(Iterable<Meal> actual, Iterable<Meal> expected) {
         assertThat(actual).usingElementComparatorIgnoringFields("user").isEqualTo(expected);
+    }
+
+    public static void assertMatch(Meal actual, Meal mealExpected, User userExpected) {
+        assertThat(actual).isEqualToIgnoringGivenFields(mealExpected, "user");
+        assertThat(actual.getUser()).isEqualToIgnoringGivenFields(userExpected, "registered", "roles");
     }
 }

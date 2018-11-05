@@ -11,6 +11,10 @@ import java.util.List;
 public interface MealService {
     Meal get(int id, int userId) throws NotFoundException;
 
+    default Meal getWithUser(int id, int userId) {
+        return null;
+    }
+
     void delete(int id, int userId) throws NotFoundException;
 
     default List<Meal> getBetweenDates(LocalDate startDate, LocalDate endDate, int userId) {
