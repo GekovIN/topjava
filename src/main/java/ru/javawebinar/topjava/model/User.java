@@ -43,8 +43,7 @@ public class User extends AbstractNamedEntity {
     @NotNull
     private Date registered = new Date();
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @OrderBy("dateTime desc")
     private List<Meal> meals;
 
