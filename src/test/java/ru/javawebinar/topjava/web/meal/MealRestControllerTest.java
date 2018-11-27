@@ -44,8 +44,10 @@ public class MealRestControllerTest extends AbstractControllerTest {
         TestUtil.print(
             mockMvc.perform(post(MealRestController.REST_URL + "/filter")
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .param("startDate", "2015-05-30T09:00:00")
-                    .param("endDate", "2015-05-30T14:00:00"))
+                    .param("startDate", "2015-05-30")
+                    .param("startTime", "09:00:00")
+                    .param("endDate", "2015-05-30")
+                    .param("endTime", "14:00:00"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                     .andExpect(contentJson(MEAL2, MEAL1))
