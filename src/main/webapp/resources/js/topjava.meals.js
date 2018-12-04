@@ -41,10 +41,14 @@ function updateFiltered() {
     var endTime = document.getElementById("endTime").value;
 
     $.get(ajaxUrl +
-        "updateFiltered?startDate=" + startDate +
+        "filter?startDate=" + startDate +
         "&startTime=" + startTime +
         "&endDate=" + endDate +
         "&endTime=" + endTime, function (data) {
         datatableApi.clear().rows.add(data).draw();
     });
+}
+
+function resetFilter() {
+    document.getElementById("filterForm").reset();
 }

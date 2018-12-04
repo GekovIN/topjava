@@ -29,8 +29,11 @@
                 <label for="endTime" class="col-form-label"><spring:message code="meal.endTime"/> </label>
                 <input type="time" class="form-control" id="endTime" name="endTime">
             </div>
-            <button type="button" id="form-submit" class="btn btn-success btn-lg pull-left "
+            <button type="button" id="form-submit" class="btn btn-success btn-lg pull-left"
                     onclick="updateFiltered()"><spring:message code="meal.filter"/></button>
+
+            <button type="button" id="filter-clean" class="btn-secondary btn-lg pull-right"
+                    onclick="resetFilter()"><spring:message code="meal.filter.clear"/></button>
         </form>
 
         <br/>
