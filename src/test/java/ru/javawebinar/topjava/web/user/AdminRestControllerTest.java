@@ -11,6 +11,7 @@ import ru.javawebinar.topjava.web.json.JsonUtil;
 
 import java.util.Collections;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -21,6 +22,7 @@ import static ru.javawebinar.topjava.UserTestData.*;
 class AdminRestControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL = AdminRestController.REST_URL + '/';
+    private static final String AJAX_URL = "/ajax/admin/users/";
 
     @Test
     void testGet() throws Exception {
@@ -82,5 +84,16 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(getUserMatcher(ADMIN, USER)));
+    }
+
+    @Test
+    void updateUserStatus() throws Exception {
+        mockMvc.perform(post(AJAX_URL + "updateStatus")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", String.valueOf(USER_ID))
+                .param("status", "false"));
+
+        boolean enabled = userService.get(USER_ID).isEnabled();
+        assertThat(enabled).isFalse();
     }
 }

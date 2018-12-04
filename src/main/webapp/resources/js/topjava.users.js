@@ -40,3 +40,14 @@ $(function () {
     });
     makeEditable();
 });
+
+function updateUserStatus(id, checkBox) {
+    $.ajax({
+        type:"POST",
+        url:ajaxUrl + "updateStatus",
+        data: {id: id, status: checkBox.checked}
+    }).done(function () {
+        updateTable();
+        successNoty("Status changed");
+    });
+}

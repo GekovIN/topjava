@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.util.List;
 
@@ -35,5 +36,13 @@ public class AdminAjaxController extends AbstractUserController {
         if (user.isNew()) {
             super.create(user);
         }
+    }
+
+    @PostMapping("/updateStatus")
+    public void updateStatus(@RequestParam("id") Integer id,
+                             @RequestParam("status") boolean status) {
+        User user = get(id);
+        user.setEnabled(status);
+        update(user, id);
     }
 }
