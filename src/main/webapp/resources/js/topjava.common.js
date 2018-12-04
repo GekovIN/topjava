@@ -26,7 +26,19 @@ function deleteRow(id) {
     });
 }
 
+function checkFilter() {
+    return ajaxUrl.indexOf("meals") !== -1;
+}
+
 function updateTable() {
+    if (checkFilter()) {
+        updateFiltered();
+    } else {
+        nonFilteredTableUpdate();
+    }
+}
+
+function nonFilteredTableUpdate() {
     $.get(ajaxUrl, function (data) {
         datatableApi.clear().rows.add(data).draw();
     });

@@ -33,3 +33,18 @@ $(function () {
     });
     makeEditable();
 });
+
+function updateFiltered() {
+    var startDate = document.getElementById("startDate").value;
+    var startTime = document.getElementById("startTime").value;
+    var endDate = document.getElementById("endDate").value;
+    var endTime = document.getElementById("endTime").value;
+
+    $.get(ajaxUrl +
+        "updateFiltered?startDate=" + startDate +
+        "&startTime=" + startTime +
+        "&endDate=" + endDate +
+        "&endTime=" + endTime, function (data) {
+        datatableApi.clear().rows.add(data).draw();
+    });
+}
