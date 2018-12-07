@@ -46,3 +46,12 @@ $(function () {
         updateTable: updateFilteredTable
     });
 });
+
+function saveMeal() {
+    let cal = document.getElementById("calories").value;
+    if (cal === "") {
+        document.getElementById("calories").value = null;
+    }
+
+    save();
+}
