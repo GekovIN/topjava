@@ -63,6 +63,20 @@ $(function () {
         }),
         updateTable: updateFilteredTable
     });
+
+    $("#dateTime").datetimepicker({
+        format: "Y-m-d H:i"
+    });
+
+    $("#startDate, #endDate").datetimepicker({
+        timepicker:false,
+        format: "Y-m-d"
+    });
+
+    $("#startTime, #endTime").datetimepicker({
+        datepicker:false,
+        format: "H:i"
+    })
 });
 
 function saveMeal() {
@@ -70,6 +84,9 @@ function saveMeal() {
     if (cal === "") {
         document.getElementById("calories").value = null;
     }
+
+    // let date = document.getElementById("dateTime").value;
+    // document.getElementById("dateTime").value = date.replace(" ", "T");
 
     save();
 }
