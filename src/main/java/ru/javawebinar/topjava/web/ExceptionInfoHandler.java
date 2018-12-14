@@ -7,6 +7,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,14 +53,29 @@ public class ExceptionInfoHandler {
         return logAndGetErrorInfo(req, e, true, APP_ERROR);
     }
 
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler({BindException.class})
+    public ErrorInfo handleValidationError(HttpServletRequest req, BindException e) {
+        return logAndGetValidationErrorInfo(req, e, true, ErrorType.VALIDATION_ERROR);
+    }
+
 //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
         Throwable rootCause = ValidationUtil.getRootCause(e);
+        logException(req, logException, errorType, rootCause);
+        return new ErrorInfo(req.getRequestURL(), errorType, ValidationUtil.getMessage(rootCause));
+    }
+
+    private static ErrorInfo logAndGetValidationErrorInfo(HttpServletRequest req, BindException bindEx, boolean logException, ErrorType errorType) {
+        logException(req, logException, errorType, bindEx);
+        return new ErrorInfo(req.getRequestURL(), errorType, ValidationUtil.getBindingErrorsMessages(bindEx.getBindingResult()));
+    }
+
+    private static void logException(HttpServletRequest req, boolean logException, ErrorType errorType, Throwable rootCause) {
         if (logException) {
             log.error(errorType + " at request " + req.getRequestURL(), rootCause);
         } else {
             log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
         }
-        return new ErrorInfo(req.getRequestURL(), errorType, ValidationUtil.getMessage(rootCause));
     }
 }

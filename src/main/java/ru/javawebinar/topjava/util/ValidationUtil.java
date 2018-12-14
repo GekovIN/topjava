@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.util;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import ru.javawebinar.topjava.HasId;
 import ru.javawebinar.topjava.util.exception.IllegalRequestDataException;
@@ -59,7 +60,12 @@ public class ValidationUtil {
         return result;
     }
 
-    public static ResponseEntity<String> getErrorResponse(BindingResult result) {
+//    Become unuseful because of ExceptionInfoHandler
+//    public static ResponseEntity<String> getErrorResponse(BindingResult result) {
+//        return new ResponseEntity<>(getBindingErrorsMessages(result), HttpStatus.UNPROCESSABLE_ENTITY);
+//    }
+
+    public static String getBindingErrorsMessages(BindingResult result) {
         StringJoiner joiner = new StringJoiner("<br>");
         result.getFieldErrors().forEach(
                 fe -> {
@@ -71,7 +77,7 @@ public class ValidationUtil {
                         joiner.add(msg);
                     }
                 });
-        return new ResponseEntity<>(joiner.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
+        return joiner.toString();
     }
 
     public static String getMessage(Throwable e) {
