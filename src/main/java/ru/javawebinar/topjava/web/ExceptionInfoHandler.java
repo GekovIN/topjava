@@ -39,11 +39,16 @@ public class ExceptionInfoHandler {
     @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
+        Throwable rootCause = ValidationUtil.getRootCause(e);
+        if (rootCause.getMessage().contains("unique_email")) {
+            return logAndGetErrorInfo(req, rootCause, true, ErrorType.DATA_ERROR, "User with this email already exists");
+        }
         return logAndGetErrorInfo(req, e, true, DATA_ERROR);
     }
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
-    @ExceptionHandler({IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
+    @ExceptionHandler({IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class,
+                       HttpMessageNotReadableException.class})
     public ErrorInfo illegalRequestDataError(HttpServletRequest req, Exception e) {
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
     }
@@ -67,18 +72,27 @@ public class ExceptionInfoHandler {
     }
 
 //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
-    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
+    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e,
+                                                boolean logException, ErrorType errorType) {
         Throwable rootCause = ValidationUtil.getRootCause(e);
         logException(req, logException, errorType, rootCause);
         return new ErrorInfo(req.getRequestURL(), errorType, ValidationUtil.getMessage(rootCause));
     }
 
-    private static ErrorInfo logAndGetBindingValidationErrorInfo(HttpServletRequest req, BindException bindEx, boolean logException, ErrorType errorType) {
+    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Throwable rootCause, boolean logException,
+                                                ErrorType errorType, String message) {
+        logException(req, logException, errorType, rootCause);
+        return new ErrorInfo(req.getRequestURL(), errorType, message);
+    }
+
+    private static ErrorInfo logAndGetBindingValidationErrorInfo(HttpServletRequest req, BindException bindEx,
+                                                                 boolean logException, ErrorType errorType) {
         logException(req, logException, errorType, bindEx);
         return new ErrorInfo(req.getRequestURL(), errorType, ValidationUtil.getBindingErrorsMessages(bindEx.getBindingResult()));
     }
 
-    private static ErrorInfo logAndGetArgumentValidationErrorInfo(HttpServletRequest req, MethodArgumentNotValidException methEx, boolean logException, ErrorType errorType) {
+    private static ErrorInfo logAndGetArgumentValidationErrorInfo(HttpServletRequest req, MethodArgumentNotValidException methEx,
+                                                                  boolean logException, ErrorType errorType) {
         logException(req, logException, errorType, methEx);
         return new ErrorInfo(req.getRequestURL(), errorType, ValidationUtil.getBindingErrorsMessages(methEx.getBindingResult()));
     }
