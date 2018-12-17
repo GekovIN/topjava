@@ -235,6 +235,13 @@
             <artifactId>spring-webmvc</artifactId>
         </dependency>
 
+        <!--Validation-->
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.6</version>
+        </dependency>
+
         <!-- Webjars (static dependencies distributed as JAR files) -->
         <dependency>
             <groupId>org.webjars</groupId>
