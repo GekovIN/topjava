@@ -6,10 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
+
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -112,6 +116,23 @@ class MealRestControllerTest extends AbstractControllerTest {
 
         assertMatch(returned, created);
         assertMatch(service.getAll(ADMIN_ID), ADMIN_MEAL2, created, ADMIN_MEAL1);
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void testCreateDuplicateDateTime() throws Exception {
+
+        Meal created = getCreated();
+        created.setDateTime(LocalDateTime.of(2015, 6, 1, 14, 0, 0));
+        MvcResult result = mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(created))
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        assertThat(response).contains("Meal with this date and time already exists");
     }
 
     @Test

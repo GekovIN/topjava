@@ -2,9 +2,10 @@ package ru.javawebinar.topjava.web.user;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.TestUtil;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.UserTo;
@@ -65,6 +66,22 @@ class ProfileRestControllerTest extends AbstractControllerTest {
         assertMatch(userService.getByEmail("newemail@ya.ru"), created);
     }
 
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void testRegisterDuplicateEmail() throws Exception {
+        UserTo createdTo = new UserTo(null, "newName", "user@yandex.ru", "newPassword", 1500);
+
+        MvcResult result = mockMvc.perform(post(REST_URL + "/register").contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(createdTo)))
+                .andDo(print())
+                .andExpect(status().isConflict())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        assertThat(response).contains("User with this email already exists");
+    }
+
     @Test
     void testUpdate() throws Exception {
         UserTo updatedTo = new UserTo(null, "newName", "newemail@ya.ru", "newPassword", 1500);
@@ -94,4 +111,5 @@ class ProfileRestControllerTest extends AbstractControllerTest {
         assertThat(response).contains("name must not be blank");
 
     }
+
 }
